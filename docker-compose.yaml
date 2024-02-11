@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:latest
+    restart: always
+
+  django:
+    restart: always
+    build:
+      context: ./webapp
+    ports:
+      - "8000:8000"
+    command: ["python3", "./mail_sender/manage.py", "runserver", "0.0.0.0:8000"]
+
+  worker:
+    restart: always
+    build:
+      context: ./webapp
+    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "worker", "-l", "info"]
+
+  beat:
+    restart: always
+    build:
+      context: ./webapp
+    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info"]
+
+  flower:
+    restart: always
+    build:
+      context: ./webapp
+    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
+    ports:
+      - "5001:5001"
