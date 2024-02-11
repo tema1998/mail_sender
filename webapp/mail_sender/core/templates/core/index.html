@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block main %}
+<div class="w-100 h-100">
+    <div class="flex justify-center mt-10">
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    
+</div>
+
+{% endblock %}
