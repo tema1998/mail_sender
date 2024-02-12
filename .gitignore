@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 /media/
 /venvvv/
+/tailwind.config.js

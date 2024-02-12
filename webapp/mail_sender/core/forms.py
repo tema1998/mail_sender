@@ -1,8 +1,9 @@
 from django import forms
-from .models import Contact
+from .models import SingleEmail
 
 
-class ContactForm(forms.ModelForm):
+class EmailForm(forms.ModelForm):
     class Meta:
-        model = Contact
-        fields = '__all__'
+        model = SingleEmail
+        fields = ['email', 'subject', 'message']
+

@@ -19,11 +19,11 @@ services:
       context: ./webapp
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "worker", "-l", "info"]
 
-  beat:
-    restart: always
-    build:
-      context: ./webapp
-    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info"]
+#  beat:
+#    restart: always
+#    build:
+#      context: ./webapp
+#    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info"]
 
   flower:
     restart: always

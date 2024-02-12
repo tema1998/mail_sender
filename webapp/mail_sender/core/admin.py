@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import *
 
 
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email')
+# @admin.register(Email)
+# class EmailAdmin(admin.ModelAdmin):
+#     list_display = '__all__'
+admin.site.register(SingleEmail)

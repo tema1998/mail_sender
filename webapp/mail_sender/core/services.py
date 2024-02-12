@@ -1,11 +1,11 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, send_mass_mail
 
 
-def send_email(user_email):
+def send_email(list_of_emails, subject, message):
     send_mail(
-        'String 1',
-        'String 2',
+        subject,
+        message,
         'artemvol1998@gmail.com',
-        [user_email],
+        list_of_emails,
         fail_silently=False
     )
