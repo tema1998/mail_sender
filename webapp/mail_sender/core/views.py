@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView
 
-from .models import SingleEmail
-from .forms import EmailForm
+from .models import *
+from .forms import EmailForm, MassEmailForm
+from .services import emails_to_json
 from .tasks import send_email_celery
 
 
@@ -51,3 +52,34 @@ class SendEmail(View):
             return redirect('success')
 
         return redirect(request.META.get('HTTP_REFERER'), {'form': form})
+
+
+class SendMassEmail(View):
+    def get(self, request):
+        form = MassEmailForm
+        return render(request, 'core/send_emails.html', {'form': form, })
+
+    def post(self, request):
+        form = MassEmailForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            json_emails = emails_to_json(cd['emails_list'])
+            subject = cd['subject']
+            message = cd['message']
+
+            MassEmail.objects.create(user=request.user, subject=subject, message=message,
+                                     emails=json_emails, number_of_valid_emails=len(json_emails),
+                                     status=False)
+
+            send_email_celery.delay(list(json_emails.values()), subject, message)
+            return redirect('success')
+
+        return redirect(request.META.get('HTTP_REFERER'), {'form': form})
+
+
+class History(View):
+    def get(self, request):
+        user = request.user
+        sended_emails = SingleEmail.objects.filter(user=user)
+        sended_mass_emails = MassEmail.objects.filter(user=user)
+        return render(request, 'core/history.html', {'sended_emails': sended_emails, 'sended_mass_emails': sended_mass_emails, })
