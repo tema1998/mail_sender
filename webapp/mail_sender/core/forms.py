@@ -1,5 +1,5 @@
 from django import forms
-from .models import SingleEmail
+from .models import *
 
 
 class EmailForm(forms.ModelForm):
@@ -12,8 +12,13 @@ class MassEmailForm(forms.ModelForm):
     emails_list = forms.CharField()
 
     class Meta:
-        model = SingleEmail
+        model = MassEmail
         fields = ['subject', 'message']
-        # widgets = {
-        #     'emails_list': forms.TextInput(attrs={'placeholder': "'email1@gmail.com', 'email2@mail.ru'"})
-        # }
+
+
+class CreateTaskForm(forms.ModelForm):
+    emails_list = forms.CharField()
+
+    class Meta:
+        model = Task
+        fields = ['day', 'hour', 'subject', 'message']
