@@ -4,6 +4,8 @@ services:
   redis:
     image: redis:latest
     restart: always
+    ports:
+      - "6379:6379"
 
   django:
     restart: always
@@ -11,19 +13,32 @@ services:
       context: ./webapp
     ports:
       - "8000:8000"
+    env_file:
+      - ./webapp/mail_sender/.env.dev
+    depends_on:
+      - pgdb
     command: ["python3", "./mail_sender/manage.py", "runserver", "0.0.0.0:8000"]
 
   worker:
     restart: always
     build:
       context: ./webapp
+    volumes:
+      - ./webapp/:/usr/src/app/
+    depends_on:
+      - redis
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "worker", "-l", "info"]
 
-#  beat:
-#    restart: always
-#    build:
-#      context: ./webapp
-#    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info"]
+  beat:
+    restart: always
+    build:
+      context: ./webapp
+    depends_on:
+      - worker
+      - redis
+    volumes:
+      - ./webapp/:/usr/src/app/
+    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info", "-S", "django"]
 
   flower:
     restart: always
@@ -32,3 +47,24 @@ services:
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
     ports:
       - "5001:5001"
+
+  pgdb:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: pgdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
+  migration:
+    build:
+      context: ./webapp
+    command: python ./mail_sender/manage.py migrate --noinput
+    depends_on:
+      - pgdb
+volumes:
+  pgdbdata:

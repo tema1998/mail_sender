@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from django_celery_beat.models import PeriodicTask
 
 
 class EmailForm(forms.ModelForm):
@@ -18,7 +19,9 @@ class MassEmailForm(forms.ModelForm):
 
 class CreateTaskForm(forms.ModelForm):
     emails_list = forms.CharField()
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
 
     class Meta:
-        model = Task
-        fields = ['day', 'hour', 'subject', 'message']
+        model = PeriodicTask
+        fields = ['name', 'interval']

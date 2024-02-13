@@ -1,3 +1,6 @@
+from time import sleep
+
+from celery import shared_task
 from django.core.mail import send_mail
 from mail_sender.celery import app
 
@@ -10,14 +13,6 @@ def send_email_celery(list_of_emails, subject, message):
     send_email(list_of_emails, subject, message)
 
 
-@app.task
-def send_beat_email():
-    for contact in SingleEmail.objects.all():
-        # send_mail(
-        #     'Вы подписались',
-        #     'Будем присылать каждую минуту спам!',
-        #     'artemvol1998@gmail.com',
-        #     [contact.email],
-        #     fail_silently=False
-        # )
-        print('123')
+@shared_task
+def send_email_beat(list_of_emails, subject, message):
+    send_email(list_of_emails, subject, message)
