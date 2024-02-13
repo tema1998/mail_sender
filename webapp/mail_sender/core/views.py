@@ -120,3 +120,9 @@ class CreateTask(View):
 
         return redirect(request.META.get('HTTP_REFERER'), {'form': form})
 
+
+class Tasks(View):
+    def get(self, request):
+        user = request.user
+        tasks = TaskCore.objects.filter(user=user)
+        return render(request, 'core/tasks.html', {'tasks': tasks,})
