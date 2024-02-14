@@ -1,5 +1,6 @@
 import json
 
+from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -117,7 +118,7 @@ class CreateTask(View):
             task_core_obj = TaskCore.objects.create(user=request.user, emails=json_emails_list, subject=subject,
                                                     message=message, task=periodic_task_obj,
                                                     number_of_valid_emails=len(json_emails_list))
-
+            return redirect(request.META.get('HTTP_REFERER'))
         return redirect(request.META.get('HTTP_REFERER'), {'form': form})
 
 
@@ -126,3 +127,26 @@ class Tasks(View):
         user = request.user
         tasks = TaskCore.objects.filter(user=user)
         return render(request, 'core/tasks.html', {'tasks': tasks,})
+
+
+class EnableDisableTask(View):
+    def post(self, request):
+        beat_task_id = request.POST['beat_task_id']
+        beat_task = PeriodicTask.objects.get(id=beat_task_id)
+        if beat_task.enabled:
+            beat_task.enabled = 0
+        else:
+            beat_task.enabled = 1
+        beat_task.save()
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+class DeleteTask(View):
+    def post(self, request):
+        beat_task_id = request.POST['beat_task_id']
+        beat_task = PeriodicTask.objects.get(id=beat_task_id)
+        core_task = TaskCore.objects.get(task=beat_task)
+        with transaction.atomic():
+            core_task.delete()
+            beat_task.delete()
+        return redirect(request.META.get('HTTP_REFERER'))

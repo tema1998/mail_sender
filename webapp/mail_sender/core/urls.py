@@ -10,4 +10,6 @@ urlpatterns = [
     path('history', views.History.as_view(), name='history'),
     path('create-task', views.CreateTask.as_view(), name='create-task'),
     path('tasks', views.Tasks.as_view(), name='tasks'),
+    path('enable-disable-task', views.EnableDisableTask.as_view(), name='enable-disable-task'),
+    path('delete-task', views.DeleteTask.as_view(), name='delete-task'),
 ]
