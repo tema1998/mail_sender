@@ -6,18 +6,12 @@ from django.views import View
 
 from .models import *
 from .forms import SendEmailForm, CreateTaskForm
-from .services import emails_to_json
 from .tasks import send_email_celery, send_email_beat
 
 
 class Index(View):
     def get(self, request):
         return render(request, 'core/index.html')
-
-
-class Success(View):
-    def get(self, request):
-        return render(request, 'core/success.html')
 
 
 class SendEmail(View):
@@ -35,7 +29,7 @@ class SendEmail(View):
             message = cd['message']
 
             send_email_celery.delay(request.user.id, json_emails_list, subject, message)
-            return redirect('success')
+            return redirect('history')
 
         return render(request, 'core/send_email.html', {'form': form, })
 
@@ -71,13 +65,12 @@ class CreateTask(View):
                 name=name,
                 task="core.tasks.send_email_beat",
                 args=json.dumps([request.user.id, json_emails_list, subject, message])
-                # one_off=True,
             )
 
-            task_core_obj = TaskCore.objects.create(user=request.user, emails=json_emails_list, subject=subject,
-                                                    message=message, task=periodic_task_obj,
-                                                    number_of_valid_emails=len(json_emails_list))
-            return redirect(request.META.get('HTTP_REFERER'))
+            TaskCore.objects.create(user=request.user, emails=json_emails_list, subject=subject, message=message,
+                                    task=periodic_task_obj, number_of_valid_emails=len(json_emails_list))
+
+            return redirect('tasks')
         return render(request, 'core/create_task.html', {'form': form, })
 
 
