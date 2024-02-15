@@ -10,4 +10,7 @@ urlpatterns = [
     path('tasks', views.Tasks.as_view(), name='tasks'),
     path('enable-disable-task', views.EnableDisableTask.as_view(), name='enable-disable-task'),
     path('delete-task', views.DeleteTask.as_view(), name='delete-task'),
+    path('signup', views.Signup.as_view(), name='signup'),
+    path('signin', views.Signin.as_view(), name='signin'),
+    path('logout', views.Logout.as_view(), name='logout'),
 ]

@@ -1,20 +1,25 @@
 import json
 
+from django.contrib import auth, messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views import View
 
 from .models import *
-from .forms import SendEmailForm, CreateTaskForm
-from .tasks import send_email_celery, send_email_beat
+from .forms import SendEmailForm, CreateTaskForm, SigninForm, SignupForm
+from .tasks import send_email_celery
 
 
-class Index(View):
+class Index(LoginRequiredMixin, View):
+    login_url = 'signin'
     def get(self, request):
         return render(request, 'core/index.html')
 
 
-class SendEmail(View):
+class SendEmail(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
         form = SendEmailForm
         return render(request, 'core/send_email.html', {'form': form, })
@@ -34,7 +39,9 @@ class SendEmail(View):
         return render(request, 'core/send_email.html', {'form': form, })
 
 
-class History(View):
+class History(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
         sent_emails = EmailHistory.objects.filter(user=request.user).order_by('-task_result__date_done')
         task_sent_emails = TaskHistory.objects.filter(user=request.user).order_by('-task_result__date_done')
@@ -44,7 +51,9 @@ class History(View):
                                                      })
 
 
-class CreateTask(View):
+class CreateTask(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
         form = CreateTaskForm
         return render(request, 'core/create_task.html', {'form': form, })
@@ -74,14 +83,17 @@ class CreateTask(View):
         return render(request, 'core/create_task.html', {'form': form, })
 
 
-class Tasks(View):
+class Tasks(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
         user = request.user
         tasks = TaskCore.objects.filter(user=user).order_by('-task__date_changed')
         return render(request, 'core/tasks.html', {'tasks': tasks, })
 
 
-class EnableDisableTask(View):
+class EnableDisableTask(LoginRequiredMixin, View):
+
     def post(self, request):
         beat_task_id = request.POST['beat_task_id']
         beat_task = PeriodicTask.objects.get(id=beat_task_id)
@@ -93,7 +105,9 @@ class EnableDisableTask(View):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-class DeleteTask(View):
+class DeleteTask(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def post(self, request):
         beat_task_id = request.POST['beat_task_id']
         beat_task = PeriodicTask.objects.get(id=beat_task_id)
@@ -102,3 +116,56 @@ class DeleteTask(View):
             core_task.delete()
             beat_task.delete()
         return redirect(request.META.get('HTTP_REFERER'))
+
+
+class Signup(View):
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signup_form = SignupForm()
+            return render(request, 'core/signup.html', {'signup_form': signup_form})
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signup_form = SignupForm(request.POST)
+            if signup_form.is_valid():
+                cd = signup_form.cleaned_data
+                username = cd['username']
+                email = cd['email']
+                password = cd['password']
+
+                new_user = User.objects.create_user(username=username, password=password, email=email)
+                auth.login(request, new_user)
+                return redirect('index')
+            return render(request, 'core/signup.html', {'signup_form': signup_form})
+
+
+class Signin(View):
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signin_form = SigninForm()
+            return render(request, 'core/signin.html', {'signin_form': signin_form})
+
+    def post(self, request):
+        signin_form = SigninForm(request.POST)
+        if signin_form.is_valid():
+            cd = signin_form.cleaned_data
+            user = auth.authenticate(username=cd['username'], password=cd['password'])
+            if user:
+                auth.login(request, user)
+                return redirect('index')
+        messages.error(request, f'Invalid username or password')
+        return render(request, 'core/signin.html', {'signin_form': signin_form})
+
+
+class Logout(LoginRequiredMixin, View):
+    def post(self, request):
+        auth.logout(request)
+        return redirect('signin')

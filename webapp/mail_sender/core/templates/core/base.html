@@ -52,20 +52,17 @@
 
        <ul class="flex flex-col lg:flex-row">
         <li class="mb-4 lg:mb-0 lg:pr-2">
-         <a class=" hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:hover:text-white dark:focus:text-white lg:p-2 " href="#!">
-          Sign up
-         </a>
+         Hello, {{request.user.username}}!
         </li>
         <li class="mb-4 lg:mb-0 lg:pr-2">
-         <a class=" hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:hover:text-white dark:focus:text-white lg:p-2 " href="#!">
-          Sign in
-         </a>
+         <form action="{% url 'logout' %}" method="POST">
+          {% csrf_token %}
+             <button class="px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md " type="submit">
+                 Log Out
+             </button>
+         </form>
         </li>
-        <li class="mb-4 lg:mb-0 lg:pr-2">
-         <a class=" hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:hover:text-white dark:focus:text-white lg:p-2 " href="#!">
-          Log out
-         </a>
-        </li>
+
        </ul>
 
       </div>
