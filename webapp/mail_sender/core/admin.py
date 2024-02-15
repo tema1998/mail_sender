@@ -8,3 +8,4 @@ from .models import *
 admin.site.register(SingleEmail)
 admin.site.register(MassEmail)
 admin.site.register(TaskCore)
+admin.site.register(TaskHistory)

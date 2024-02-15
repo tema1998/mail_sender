@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
+from django_celery_results.models import TaskResult
 
 from .models import *
 from .forms import EmailForm, MassEmailForm, CreateTaskForm
@@ -87,7 +88,12 @@ class History(View):
         user = request.user
         sended_emails = SingleEmail.objects.filter(user=user)
         sended_mass_emails = MassEmail.objects.filter(user=user)
-        return render(request, 'core/history.html', {'sended_emails': sended_emails, 'sended_mass_emails': sended_mass_emails, })
+        sended_emails_by_tasks = TaskHistory.objects.filter(user=user).order_by('-task_result__date_done')
+
+        return render(request, 'core/history.html', {'sended_emails': sended_emails,
+                                                     'sended_mass_emails': sended_mass_emails,
+                                                     'sended_emails_by_tasks': sended_emails_by_tasks,
+                                                     })
 
 
 class CreateTask(View):
@@ -111,7 +117,7 @@ class CreateTask(View):
                 interval=interval,
                 name=name,
                 task="core.tasks.send_email_beat",
-                args=json.dumps([list(json_emails_list.values()), subject, message])
+                args=json.dumps([request.user.id, json_emails_list, subject, message])
                 # one_off=True,
             )
 

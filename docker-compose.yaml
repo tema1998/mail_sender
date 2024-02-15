@@ -40,13 +40,13 @@ services:
       - ./webapp/:/usr/src/app/
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info", "-S", "django"]
 
-  flower:
-    restart: always
-    build:
-      context: ./webapp
-    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
-    ports:
-      - "5001:5001"
+#  flower:
+#    restart: always
+#    build:
+#      context: ./webapp
+#    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
+#    ports:
+#      - "5001:5001"
 
   pgdb:
     image: postgres
