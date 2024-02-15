@@ -29,19 +29,20 @@ class SendEmail(View):
         form = SendEmailForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            json_emails_list = emails_to_json(cd['emails_list'])
+            # Emails were converted to JSON in forms
+            json_emails_list = cd['emails_list']
             subject = cd['subject']
             message = cd['message']
 
             send_email_celery.delay(request.user.id, json_emails_list, subject, message)
             return redirect('success')
 
-        return redirect(request.META.get('HTTP_REFERER'), {'form': form})
+        return render(request, 'core/send_email.html', {'form': form, })
 
 
 class History(View):
     def get(self, request):
-        sent_emails = EmailHistory.objects.filter(user=request.user)
+        sent_emails = EmailHistory.objects.filter(user=request.user).order_by('-task_result__date_done')
         task_sent_emails = TaskHistory.objects.filter(user=request.user).order_by('-task_result__date_done')
 
         return render(request, 'core/history.html', {'sent_emails': sent_emails,
@@ -59,12 +60,11 @@ class CreateTask(View):
         if form.is_valid():
             cd = form.cleaned_data
 
-            emails_list = cd['emails_list']
+            json_emails_list = cd['emails_list']
             subject = cd['subject']
             message = cd['message']
             name = cd['name']
             interval = cd['interval']
-            json_emails_list = emails_to_json(emails_list)
 
             periodic_task_obj = PeriodicTask.objects.create(
                 interval=interval,
@@ -78,14 +78,14 @@ class CreateTask(View):
                                                     message=message, task=periodic_task_obj,
                                                     number_of_valid_emails=len(json_emails_list))
             return redirect(request.META.get('HTTP_REFERER'))
-        return redirect(request.META.get('HTTP_REFERER'), {'form': form})
+        return render(request, 'core/create_task.html', {'form': form, })
 
 
 class Tasks(View):
     def get(self, request):
         user = request.user
-        tasks = TaskCore.objects.filter(user=user)
-        return render(request, 'core/tasks.html', {'tasks': tasks,})
+        tasks = TaskCore.objects.filter(user=user).order_by('-task__date_changed')
+        return render(request, 'core/tasks.html', {'tasks': tasks, })
 
 
 class EnableDisableTask(View):

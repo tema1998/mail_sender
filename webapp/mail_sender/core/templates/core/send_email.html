@@ -4,13 +4,13 @@
 {% block title %} Send emails {% endblock %}
 
 {% block main %}
-<div class="w-100 h-100">
-    <div class="flex justify-center mt-10">
-        <form action="" method="post">
+<div class="flex justify-center items-center">
+    <div class="mt-10 w-8/12">
+        <form class="block" action="" method="post">
             {% csrf_token %}
             {% for field in form %}
                 <div class="mb-6">
-                    {{ field.errors }}
+                    <span class="text-red-600"> {{ field.errors }} </span>
                     <label for="{{field.id_for_label}}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ field.label_tag }}</label>
                     {{ field|addclass:'bg-gray-50 border border-gray-300  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' }}
                 </div>

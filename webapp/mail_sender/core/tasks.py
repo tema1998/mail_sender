@@ -19,7 +19,6 @@ def send_email_celery(self, user_id, json_emails_list, subject, message):
     task_result.save()
     EmailHistory.objects.create(user=user, emails=json_emails_list, subject=subject, message=message,
                                 task_result=task_result)
-    time.sleep(10)
 
 
 @shared_task(bind=True)
