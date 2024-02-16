@@ -6,7 +6,7 @@ from mail_sender import settings
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 
 
-def send_email(list_of_emails, subject, message):
+def send_email(list_of_emails: list, subject: str, message: str) -> None:
     """
     Extend standard function by setting email from settings.
     """
@@ -19,7 +19,7 @@ def send_email(list_of_emails, subject, message):
     )
 
 
-def validate_email(email):
+def validate_email(email: str) -> bool:
     """
     Receive email, return True if it has the form email,
     else return False
@@ -29,7 +29,7 @@ def validate_email(email):
     return False
 
 
-def parse_and_validate_emails(emails_list):
+def parse_and_validate_emails(emails_list: list) -> list:
     """
     Receive list of emails, validate emails,
     returns only validated emails list.
@@ -43,7 +43,7 @@ def parse_and_validate_emails(emails_list):
     return validated_emails
 
 
-def emails_to_json(emails_list):
+def emails_to_json(emails_list: list) -> dict:
     """
     Receive list of emails, returns enumerated emails - dict.
     """
