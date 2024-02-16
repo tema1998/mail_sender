@@ -1,7 +1,7 @@
 import re
 
 from django.core.mail import send_mail
-from ..mail_sender import settings
+from mail_sender import settings
 
 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 

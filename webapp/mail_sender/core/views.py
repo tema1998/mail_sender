@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.views import View
+from django import http
 
 from .models import *
 from .forms import SendEmailForm, CreateTaskForm, SigninForm, SignupForm
