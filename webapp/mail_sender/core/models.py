@@ -28,7 +28,6 @@ class TaskCore(models.Model):
     subject = models.CharField(max_length=100)
     message = models.TextField()
     task = models.ForeignKey(PeriodicTask, on_delete=models.CASCADE)
-    number_of_valid_emails = models.SmallIntegerField()
 
     def __str__(self):
         return self.subject

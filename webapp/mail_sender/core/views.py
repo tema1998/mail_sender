@@ -38,11 +38,11 @@ class SendEmail(LoginRequiredMixin, View):
         if form.is_valid():
             cd = form.cleaned_data
             # Emails were converted to JSON in forms
-            json_emails_list = cd['emails_list']
+            json_emails_dict = cd['emails_list']
             subject = cd['subject']
             message = cd['message']
 
-            send_email_celery.delay(request.user.id, json_emails_list, subject, message)
+            send_email_celery.delay(request.user.id, json_emails_dict, subject, message)
             return redirect('history')
 
         return render(request, 'core/send_email.html', {'form': form, })
@@ -81,7 +81,7 @@ class CreateTask(LoginRequiredMixin, View):
         if form.is_valid():
             cd = form.cleaned_data
 
-            json_emails_list = cd['emails_list']
+            json_emails_dict = cd['emails_list']
             subject = cd['subject']
             message = cd['message']
             name = cd['name']
@@ -91,11 +91,11 @@ class CreateTask(LoginRequiredMixin, View):
                 interval=interval,
                 name=name,
                 task="core.tasks.send_email_beat",
-                args=json.dumps([request.user.id, json_emails_list, subject, message])
+                args=json.dumps([request.user.id, json_emails_dict, subject, message])
             )
 
-            TaskCore.objects.create(user=request.user, emails=json_emails_list, subject=subject, message=message,
-                                    task=periodic_task_obj, number_of_valid_emails=len(json_emails_list))
+            TaskCore.objects.create(user=request.user, emails=json_emails_dict, subject=subject, message=message,
+                                    task=periodic_task_obj)
 
             return redirect('tasks')
         return render(request, 'core/create_task.html', {'form': form, })

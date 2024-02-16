@@ -29,24 +29,24 @@ def validate_email(email: str) -> bool:
     return False
 
 
-def parse_and_validate_emails(emails_list: list) -> list:
+def parse_and_validate_emails(emails_str: str) -> list:
     """
     Receive list of emails, validate emails,
     returns only validated emails list.
     """
-    emails = emails_list.split(',')
+    emails_list = emails_str.split(',')
     validated_emails = []
-    for email in emails:
+    for email in emails_list:
         s = email.replace("'", "").replace('"', '').replace(' ', '')
         if validate_email(s):
             validated_emails.append(s)
     return validated_emails
 
 
-def emails_to_json(emails_list: list) -> dict:
+def emails_to_json(emails_str: str) -> dict:
     """
     Receive list of emails, returns enumerated emails - dict.
     """
-    validated_emails = parse_and_validate_emails(emails_list)
+    validated_emails = parse_and_validate_emails(emails_str)
     return dict(enumerate(validated_emails))
 
