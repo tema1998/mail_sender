@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '213124dsa32dKMD,3pododop,EPO,P3d3'
+SECRET_KEY = os.getenv('SECRET_KEY', 'asduyg37uM89D47J3')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = bool(int(os.getenv('DEBUG')))
@@ -148,28 +148,33 @@ STATICFILES_DIRS = [
 ]
 
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'artemvol1998@gmail.com'
-EMAIL_HOST_PASSWORD = 'vkqn owae xvyz ehrz'
-EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'artemvol1998@gmail.com'
+# EMAIL_HOST_PASSWORD = 'vkqn owae xvyz ehrz'
+# EMAIL_PORT = 587
 
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
 
 CELERY_BROKER_URL = "redis://redis:6379/0"
-# CELERY_BACKEND = "redis://redis:6379/0"
+CELERY_BACKEND = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "django-db"
-# CELERY_BROKER_TRANSPORT_OPTION = {'visibility_timeout': 3600}
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_TRANSPORT_OPTION = {'visibility_timeout': 3600}
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-#         'LOCATION': 'redis://redis:6379/1'
-#     }
-# }
-#
-# CELERY_CACHE_BACKEND = 'default'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://redis:6379/1'
+    }
+}
+
+CELERY_CACHE_BACKEND = 'default'
 
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
