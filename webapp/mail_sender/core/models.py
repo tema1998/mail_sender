@@ -6,6 +6,9 @@ from django_celery_results.models import TaskResult
 
 
 class EmailHistory(models.Model):
+    """
+    Model for storage email sending history.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     emails = models.JSONField()
     subject = models.CharField(max_length=100)
@@ -17,6 +20,9 @@ class EmailHistory(models.Model):
 
 
 class TaskCore(models.Model):
+    """
+    Model for storage and manage user's tasks.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     emails = models.JSONField()
     subject = models.CharField(max_length=100)
@@ -29,11 +35,11 @@ class TaskCore(models.Model):
 
 
 class TaskHistory(models.Model):
+    """
+    Model for storage email sent by tasks history.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     emails = models.JSONField()
     subject = models.CharField(max_length=100)
     message = models.TextField()
     task_result = models.ForeignKey(TaskResult, on_delete=models.CASCADE)
-
-    # def __str__(self):
-    #     return str(self.id)
