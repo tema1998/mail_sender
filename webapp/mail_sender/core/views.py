@@ -17,7 +17,7 @@ class Index(View):
     Sitemap view of the Mail sender.
     """
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
         return render(request, 'core/index.html')
 
 
@@ -29,11 +29,11 @@ class SendEmail(LoginRequiredMixin, View):
     """
     login_url = 'signin'
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
         form = SendEmailForm
         return render(request, 'core/send_email.html', {'form': form, })
 
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         form = SendEmailForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
@@ -54,7 +54,7 @@ class History(LoginRequiredMixin, View):
     """
     login_url = 'signin'
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
         sent_emails = EmailHistory.objects.filter(user=request.user).order_by('-task_result__date_done')
         task_sent_emails = TaskHistory.objects.filter(user=request.user).order_by('-task_result__date_done')
 
@@ -72,11 +72,11 @@ class CreateTask(LoginRequiredMixin, View):
     """
     login_url = 'signin'
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
         form = CreateTaskForm
         return render(request, 'core/create_task.html', {'form': form, })
 
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         form = CreateTaskForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
@@ -107,7 +107,7 @@ class Tasks(LoginRequiredMixin, View):
     """
     login_url = 'signin'
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponse:
         user = request.user
         tasks = TaskCore.objects.filter(user=user).order_by('-task__date_changed')
         return render(request, 'core/tasks.html', {'tasks': tasks, })
@@ -121,7 +121,7 @@ class EnableDisableTask(LoginRequiredMixin, View):
     and do a redirection.
     """
 
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponse:
         beat_task_id = request.POST['beat_task_id']
         beat_task = PeriodicTask.objects.get(id=beat_task_id)
         if beat_task.enabled:
@@ -140,7 +140,7 @@ class DeleteTask(LoginRequiredMixin, View):
     """
     login_url = 'signin'
 
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         beat_task_id = request.POST['beat_task_id']
         beat_task = PeriodicTask.objects.get(id=beat_task_id)
         core_task = TaskCore.objects.get(task=beat_task)
@@ -161,14 +161,14 @@ class Signup(View):
     else render a template with a Validation error.
     """
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         if request.user.is_authenticated:
             return redirect('index')
         else:
             signup_form = SignupForm()
             return render(request, 'core/signup.html', {'signup_form': signup_form})
 
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         if request.user.is_authenticated:
             return redirect('index')
         else:
@@ -196,14 +196,14 @@ class Signin(View):
     else render a template with a Validation error.
     """
 
-    def get(self, request):
+    def get(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         if request.user.is_authenticated:
             return redirect('index')
         else:
             signin_form = SigninForm()
             return render(request, 'core/signin.html', {'signin_form': signin_form})
 
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         signin_form = SigninForm(request.POST)
         if signin_form.is_valid():
             cd = signin_form.cleaned_data
@@ -220,6 +220,6 @@ class Logout(LoginRequiredMixin, View):
     View allow User to exit from account,
     then redirect to signin page.
     """
-    def post(self, request):
+    def post(self, request: http.HttpRequest) -> http.HttpResponseRedirect:
         auth.logout(request)
         return redirect('signin')
