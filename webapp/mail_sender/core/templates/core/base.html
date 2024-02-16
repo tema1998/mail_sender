@@ -51,6 +51,8 @@
        </ul>
 
        <ul class="flex flex-col lg:flex-row items-center justify-center">
+
+        {% if request.user.username %}
         <li class="mb-4 lg:mb-0 lg:pr-2">
          Hello, {{request.user.username}}!
         </li>
@@ -62,7 +64,18 @@
              </button>
          </form>
         </li>
-
+        {% else %}
+        <li class="mb-2 lg:mb-0 lg:pr-2" data-te-nav-item-ref="">
+         <a class="block transition duration-150 ease-in-out hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:hover:text-white dark:focus:text-white lg:p-2 [&amp;.active]:text-black/90" data-te-nav-link-ref="" data-te-ripple-color="light" data-te-ripple-init="" href="{% url 'signin' %}">
+           Sign in
+         </a>
+        </li>
+        <li class="mb-2 lg:mb-0 lg:pr-2" data-te-nav-item-ref="">
+         <a class="block transition duration-150 ease-in-out hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:hover:text-white dark:focus:text-white lg:p-2 [&amp;.active]:text-black/90" data-te-nav-link-ref="" data-te-ripple-color="light" data-te-ripple-init="" href="{% url 'signup' %}">
+           Sign up
+         </a>
+        </li>
+        {% endif %}
        </ul>
 
       </div>
@@ -106,23 +119,13 @@
       </span>
       <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
        <li>
-        <a class="hover:underline me-4 md:me-6" href="#">
-         About
+        <a class="hover:underline me-4 md:me-6" href="https://hub.docker.com/u/tema1998">
+         GitHub
         </a>
        </li>
        <li>
-        <a class="hover:underline me-4 md:me-6" href="#">
-         Privacy Policy
-        </a>
-       </li>
-       <li>
-        <a class="hover:underline me-4 md:me-6" href="#">
-         Licensing
-        </a>
-       </li>
-       <li>
-        <a class="hover:underline" href="#">
-         Contact
+        <a class="hover:underline me-4 md:me-6" href="https://hub.docker.com/u/tema1998">
+         Docker
         </a>
        </li>
       </ul>
