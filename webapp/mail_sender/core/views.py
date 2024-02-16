@@ -11,11 +11,10 @@ from .forms import SendEmailForm, CreateTaskForm, SigninForm, SignupForm
 from .tasks import send_email_celery
 
 
-class Index(LoginRequiredMixin, View):
+class Index(View):
     """
     Sitemap view of the Mail sender.
     """
-    login_url = 'signin'
 
     def get(self, request):
         return render(request, 'core/index.html')
