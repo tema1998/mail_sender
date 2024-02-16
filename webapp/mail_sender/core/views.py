@@ -12,12 +12,21 @@ from .tasks import send_email_celery
 
 
 class Index(LoginRequiredMixin, View):
+    """
+    Sitemap view of the Mail sender.
+    """
     login_url = 'signin'
+
     def get(self, request):
         return render(request, 'core/index.html')
 
 
 class SendEmail(LoginRequiredMixin, View):
+    """
+    View for sending of Emails.
+    Do a redirection if the email's data is valid,
+    else render a template with a Validation error.
+    """
     login_url = 'signin'
 
     def get(self, request):
@@ -40,6 +49,9 @@ class SendEmail(LoginRequiredMixin, View):
 
 
 class History(LoginRequiredMixin, View):
+    """
+    View returning a list of sent emails of the user.
+    """
     login_url = 'signin'
 
     def get(self, request):
@@ -52,6 +64,12 @@ class History(LoginRequiredMixin, View):
 
 
 class CreateTask(LoginRequiredMixin, View):
+    """
+    View for creating of Tasks.
+    Create a task if the task's data is valid,
+    then do a redirection to Tasks page,
+    else render a template with a Validation error.
+    """
     login_url = 'signin'
 
     def get(self, request):
@@ -84,6 +102,9 @@ class CreateTask(LoginRequiredMixin, View):
 
 
 class Tasks(LoginRequiredMixin, View):
+    """
+    View returning a list of Tasks of the user.
+    """
     login_url = 'signin'
 
     def get(self, request):
@@ -93,6 +114,12 @@ class Tasks(LoginRequiredMixin, View):
 
 
 class EnableDisableTask(LoginRequiredMixin, View):
+    """
+    View for Enabling/Disabling of the Task.
+    Enable task if the task was disabled,
+    and disable task if the task was enabled
+    and do a redirection.
+    """
 
     def post(self, request):
         beat_task_id = request.POST['beat_task_id']
@@ -106,6 +133,11 @@ class EnableDisableTask(LoginRequiredMixin, View):
 
 
 class DeleteTask(LoginRequiredMixin, View):
+    """
+    View for Deleting of the Task.
+    Delete core_task object and beat_task object,
+    using the transaction and do a redirection.
+    """
     login_url = 'signin'
 
     def post(self, request):
@@ -119,6 +151,15 @@ class DeleteTask(LoginRequiredMixin, View):
 
 
 class Signup(View):
+    """
+    View for creating of the User.
+    GET: provides a form for registration if
+    the user has not been authorized,
+    else redirect to Index page.
+    POST: Create a User if the form's data is valid,
+    then do a redirection to Index page,
+    else render a template with a Validation error.
+    """
 
     def get(self, request):
         if request.user.is_authenticated:
@@ -145,6 +186,15 @@ class Signup(View):
 
 
 class Signin(View):
+    """
+    View for authorization.
+    GET: provides a form for authorization if
+    the user has not been authorized,
+    else redirect to Index page.
+    POST: Authorizes a User if the form's data is valid,
+    then do a redirection to Index page,
+    else render a template with a Validation error.
+    """
 
     def get(self, request):
         if request.user.is_authenticated:
@@ -166,6 +216,10 @@ class Signin(View):
 
 
 class Logout(LoginRequiredMixin, View):
+    """
+    View allow User to exit from account,
+    then redirect to signin page.
+    """
     def post(self, request):
         auth.logout(request)
         return redirect('signin')
