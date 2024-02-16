@@ -23,7 +23,7 @@ Functions |
 <image src="webapp/mail_sender/static/images/history.jpg" alt="Screenshot of History page">
 
 ### Settings
-File .env.dev contains project, DB, email] settings.
+File `.env.dev` contains project, DB, email settings.
 ```
 DEBUG=True
 SECRET_KEY=your_secret_key
