@@ -18,6 +18,10 @@ class EmailHistory(models.Model):
     def __str__(self):
         return self.subject
 
+    class Meta:
+        verbose_name = 'History of emails'
+        verbose_name_plural = 'History of emails'
+
 
 class TaskCore(models.Model):
     """
@@ -32,6 +36,10 @@ class TaskCore(models.Model):
     def __str__(self):
         return self.subject
 
+    class Meta:
+        verbose_name = 'Task management'
+        verbose_name_plural = 'Task management'
+
 
 class TaskHistory(models.Model):
     """
@@ -42,3 +50,7 @@ class TaskHistory(models.Model):
     subject = models.CharField(max_length=100)
     message = models.TextField()
     task_result = models.ForeignKey(TaskResult, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'History of emails sent by tasks'
+        verbose_name_plural = 'History of emails sent by tasks'
