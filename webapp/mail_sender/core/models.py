@@ -13,6 +13,10 @@ class EmailData(models.Model):
     def __str__(self):
         return self.subject
 
+    class Meta:
+        verbose_name = 'Email data'
+        verbose_name_plural = 'Emails data'
+
 
 class EmailHistory(models.Model):
     """
@@ -23,7 +27,7 @@ class EmailHistory(models.Model):
     task_result = models.ForeignKey(TaskResult, on_delete=models.CASCADE, verbose_name='Task result')
 
     def __str__(self):
-        return self.emails
+        return self.email_data
 
     class Meta:
         verbose_name = 'History of emails'
@@ -39,11 +43,11 @@ class TaskCore(models.Model):
     task = models.ForeignKey(PeriodicTask, on_delete=models.CASCADE, verbose_name='Task')
 
     def __str__(self):
-        return self.emails
+        return self.email_data
 
     class Meta:
         verbose_name = 'Task management'
-        verbose_name_plural = 'Task management'
+        verbose_name_plural = 'Tasks management'
 
 
 class TaskHistory(models.Model):
@@ -59,4 +63,4 @@ class TaskHistory(models.Model):
         verbose_name_plural = 'History of emails sent by tasks'
 
     def __str__(self):
-        return self.emails
+        return self.email_data
