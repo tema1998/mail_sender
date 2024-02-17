@@ -6,7 +6,7 @@ from django_celery_results.models import TaskResult
 
 from mail_sender.celery import app
 from .services import send_email
-from .models import EmailHistory, TaskHistory
+from .models import EmailHistory, TaskHistory, EmailData
 
 
 @app.task(bind=True)
@@ -22,8 +22,9 @@ def send_email_celery(self, user_id: int, json_emails_dict: dict, subject: str, 
     task_result = TaskResult.objects.get_task(self.request.id)
     task_result.status = 'RUNNING'
     task_result.save()
-    EmailHistory.objects.create(user=user, emails=json_emails_dict, subject=subject, message=message,
-                                task_result=task_result)
+
+    email_data = EmailData.objects.create(emails=json_emails_dict, subject=subject, message=message)
+    EmailHistory.objects.create(user=user, email_data=email_data, task_result=task_result)
 
     send_email(list(json_emails_dict.values()), subject, message)
 
@@ -41,7 +42,8 @@ def send_email_beat(self, user_id: int, json_emails_dict: dict, subject: str, me
     task_result = TaskResult.objects.get_task(self.request.id)
     task_result.status = 'RUNNING'
     task_result.save()
-    TaskHistory.objects.create(user=user, emails=json_emails_dict, subject=subject, message=message,
-                               task_result=task_result)
+
+    email_data = EmailData.objects.create(emails=json_emails_dict, subject=subject, message=message)
+    TaskHistory.objects.create(user=user, email_data=email_data, task_result=task_result)
 
     send_email(list(json_emails_dict.values()), subject, message)

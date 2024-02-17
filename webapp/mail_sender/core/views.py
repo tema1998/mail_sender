@@ -94,8 +94,8 @@ class CreateTask(LoginRequiredMixin, View):
                 args=json.dumps([request.user.id, json_emails_dict, subject, message])
             )
 
-            TaskCore.objects.create(user=request.user, emails=json_emails_dict, subject=subject, message=message,
-                                    task=periodic_task_obj)
+            email_data = EmailData.objects.create(emails=json_emails_dict, subject=subject, message=message)
+            TaskCore.objects.create(user=request.user, email_data=email_data, task=periodic_task_obj)
 
             return redirect('tasks')
         return render(request, 'core/create_task.html', {'form': form, })

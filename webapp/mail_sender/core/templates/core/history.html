@@ -26,12 +26,12 @@
                     {% for entry in sent_emails %}
                       <tr class="border-b bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700 ">
                         <td class="whitespace-nowrap px-6 py-4">
-                          {% for email in entry.emails.values %}
+                          {% for email in entry.email_data.emails.values %}
                             <div>{{email}}</div>
                           {% endfor %}
                         </td>
-                        <td class="whitespace-nowrap px-6 py-4">{{entry.subject|truncatechars:30}}</td>
-                        <td class="whitespace-nowrap px-6 py-4">{{entry.message|truncatechars:30}}</td>
+                        <td class="whitespace-nowrap px-6 py-4">{{entry.email_data.subject|truncatechars:30}}</td>
+                        <td class="whitespace-nowrap px-6 py-4">{{entry.email_data.message|truncatechars:30}}</td>
                         <td class="whitespace-nowrap px-6 py-4">{{entry.task_result.date_done}}</td>
                         <td class="whitespace-nowrap px-6 py-4">
                           {% if entry.task_result.status == 'SUCCESS' %}
@@ -78,14 +78,14 @@
                       <tr class="border-b bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700 ">
 
                         <td class="whitespace-nowrap px-6 py-4">
-                          {% for email in entry.emails.values %}
+                          {% for email in entry.email_data.emails.values %}
                             <div>{{email}}</div>
                           {% endfor %}
                         </td>
                         <td class="whitespace-nowrap px-6 py-4">
-                          {{entry.subject|truncatechars:30}}
+                          {{entry.email_data.email_data.subject|truncatechars:30}}
                         </td>
-                        <td class="whitespace-nowrap px-6 py-4">{{entry.message|truncatechars:30}}</td>
+                        <td class="whitespace-nowrap px-6 py-4">{{entry.email_data.message|truncatechars:30}}</td>
                         <td class="whitespace-nowrap px-6 py-4">{{entry.task_result.date_done}}</td>
                         <td class="whitespace-nowrap px-6 py-4">
                           {% if entry.task_result.status == 'SUCCESS' %}

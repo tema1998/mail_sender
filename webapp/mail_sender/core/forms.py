@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django_celery_beat.models import PeriodicTask
 
-from .models import EmailHistory
+from .models import EmailHistory, EmailData
 from .services import emails_to_json
 
 
@@ -10,7 +10,7 @@ class SendEmailForm(forms.ModelForm):
     emails_list = forms.CharField()
 
     class Meta:
-        model = EmailHistory
+        model = EmailData
         fields = ['subject', 'message']
 
     def clean_emails_list(self):

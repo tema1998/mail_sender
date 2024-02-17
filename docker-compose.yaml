@@ -17,16 +17,6 @@ services:
       - "8000:8000"
     depends_on:
       - pgdb
-#    environment:
-#      DEBUG: "False"
-#      SECRET_KEY: "dasdweujf2iu3129iOJU@213"
-#      DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 [::1]"
-#      SQL_ENGINE: "django.db.backends.postgresql_psycopg2"
-#      SQL_DATABASE: "postgres"
-#      SQL_USER: "postgres"
-#      SQL_PASSWORD: "postgres"
-#      SQL_HOST: "pgdb"
-#      SQL_PORT: 5432
     command: ["python3", "./mail_sender/manage.py", "runserver", "0.0.0.0:8000"]
 
 
@@ -75,7 +65,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdbdata:/var/lib/postgresql/data/
+      - pgdbdata-new:/var/lib/postgresql/data/
 
   migration:
     build:
@@ -86,4 +76,4 @@ services:
     env_file:
       - ./.env.dev
 volumes:
-  pgdbdata:
+  pgdbdata-new:

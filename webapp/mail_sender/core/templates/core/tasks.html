@@ -33,11 +33,11 @@
                         <td class="whitespace-nowrap px-6 py-4 font-medium">{{task.id}}</td>
                         <td class="whitespace-nowrap px-6 py-4 font-medium">{{task.task.name}}</td>
                         <td class="whitespace-nowrap px-6 py-4">
-                          {% for email in task.emails.values %}
+                          {% for email in task.email_data.emails.values %}
                             <div>{{email}}</div>
                           {% endfor %}
                         </td>
-                        <td class="whitespace-nowrap px-6 py-4">{{task.subject|truncatechars:30}}</td>
+                        <td class="whitespace-nowrap px-6 py-4">{{task.email_data.subject|truncatechars:30}}</td>
                         <td class="whitespace-nowrap px-6 py-4">Every {{task.task.interval.every}} {{task.task.interval.period}}</td>
                         <td class="whitespace-nowrap px-6 py-4">{{task.task.date_changed}}</td>
                         <td class="whitespace-nowrap px-6 py-4">
