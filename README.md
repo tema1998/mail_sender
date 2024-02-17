@@ -23,7 +23,7 @@ Functions |
 <image src="webapp/mail_sender/static/images/history.jpg" alt="Screenshot of History page">
 
 ### Settings
-File `.env.dev` contains project, DB, email settings.
+File `.env.dev` contains project, DB, email settings. Add your email settings.
 ```
 DEBUG=True
 SECRET_KEY=your_secret_key
@@ -51,6 +51,11 @@ docker-compose up -d --build
 To create superuser - run after previous command:
 ```
 docker exec -it container_id python ./mail_sender/manage.py createsuperuser
+```
+Don't forget to create task's intervals in the admin panel. I advise you to create intervals minimum 1 hour to avoid
+problems with email blocking. Users will be able to send emails every 1 hour automatically:
+```
+http://127.0.0.1:8000/admin/django_celery_beat/intervalschedule/
 ```
 
 [Docker]: https://img.shields.io/badge/docker-000000?style=for-the-badge&logo=docker&logoColor=blue
