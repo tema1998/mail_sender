@@ -2,7 +2,7 @@ FROM python:3.10.8
 RUN apt-get update -y
 RUN apt-get upgrade -y
 
-WORKDIR /webapp
+WORKDIR /s
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 

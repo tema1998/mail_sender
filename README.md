@@ -19,8 +19,8 @@ Functions |
 `Sign in / Sign up` |
 
 ### Screenshots
-<image src="webapp/mail_sender/static/images/tasks.jpg" alt="Screenshot of Tasks page">
-<image src="webapp/mail_sender/static/images/history.jpg" alt="Screenshot of History page">
+<image src="src/mail_sender/static/images/tasks.jpg" alt="Screenshot of Tasks page">
+<image src="src/mail_sender/static/images/history.jpg" alt="Screenshot of History page">
 
 ### Settings
 File `.env.dev` contains project, DB, email settings. Add your email settings.

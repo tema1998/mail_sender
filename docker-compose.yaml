@@ -10,7 +10,7 @@ services:
   django:
     restart: always
     build:
-      context: ./webapp #docker file here
+      context: ./src #docker file here
     env_file:
       - ./.env.dev
     ports:
@@ -23,9 +23,9 @@ services:
   worker:
     restart: always
     build:
-      context: ./webapp
+      context: ./src
     volumes:
-      - ./webapp/:/usr/src/app/
+      - ./src/:/usr/src/app/
     depends_on:
       - redis
     env_file:
@@ -35,12 +35,12 @@ services:
   beat:
     restart: always
     build:
-      context: ./webapp
+      context: ./src
     depends_on:
       - worker
       - redis
     volumes:
-      - ./webapp/:/usr/src/app/
+      - ./src/:/usr/src/app/
     env_file:
       - ./.env.dev
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info", "-S", "django"]
@@ -48,7 +48,7 @@ services:
 #  flower:
 #    restart: always
 #    build:
-#      context: ./webapp
+#      context: ./src
 #    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
 #    ports:
 #      - "5001:5001"
@@ -69,7 +69,7 @@ services:
 
   migration:
     build:
-      context: ./webapp
+      context: ./src
     command: python ./mail_sender/manage.py migrate --noinput
     depends_on:
       - pgdb
