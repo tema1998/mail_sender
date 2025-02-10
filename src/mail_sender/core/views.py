@@ -164,7 +164,9 @@ class Signup(View):
 
         signup_form = SignupForm(request.POST)
         if signup_form.is_valid():
-            new_user = User.objects.create_user(**signup_form.cleaned_data)
+            cd = signup_form.cleaned_data
+
+            new_user = User.objects.create_user(cd['username'], cd['password'], cd['email'])
             auth.login(request, new_user)
             return redirect("index")
 
