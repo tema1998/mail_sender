@@ -1,5 +1,7 @@
 import re
+
 from django.core.mail import send_mail
+
 from mail_sender import settings
 
 # Email regex pattern for validation

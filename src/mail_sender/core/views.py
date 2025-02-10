@@ -1,13 +1,15 @@
 import json
+
+from django import http
 from django.contrib import auth, messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
-from django import http
 
-from .models import EmailHistory, TaskHistory, PeriodicTask, EmailData, TaskCore, User
-from .forms import SendEmailForm, CreateTaskForm, SigninForm, SignupForm
+from .forms import CreateTaskForm, SendEmailForm, SigninForm, SignupForm
+from .models import (EmailData, EmailHistory, PeriodicTask, TaskCore,
+                     TaskHistory, User)
 from .tasks import send_email_celery
 
 

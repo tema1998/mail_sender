@@ -1,12 +1,11 @@
-import time
-
 from celery import shared_task
 from django.contrib.auth.models import User
 from django_celery_results.models import TaskResult
 
 from mail_sender.celery import app
+
+from .models import EmailData, EmailHistory, TaskHistory
 from .services import send_email
-from .models import EmailHistory, TaskHistory, EmailData
 
 
 @app.task(bind=True)

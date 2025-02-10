@@ -1,8 +1,6 @@
-from django.test import TestCase
-
-from django_celery_beat.models import IntervalSchedule
-
 from core.forms import *
+from django.test import TestCase
+from django_celery_beat.models import IntervalSchedule
 
 
 class SendEmailFormTest(TestCase):

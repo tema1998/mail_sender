@@ -1,16 +1,11 @@
-import unittest
+from unittest.mock import patch
 
+from core.models import EmailData, TaskCore
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
-from django.test import TestCase, Client
-from unittest.mock import patch, Mock
-
-from celery.app import task
+from django.test import Client, TestCase
 from django.urls import reverse
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
-
-import core
-from core.models import EmailData, TaskCore
 
 
 class IndexTest(TestCase):

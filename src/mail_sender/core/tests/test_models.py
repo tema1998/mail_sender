@@ -1,7 +1,6 @@
+from core.models import *
 from django.test import TestCase
 from django_celery_beat.models import IntervalSchedule
-
-from core.models import *
 
 
 class EmailDataModelTest(TestCase):
