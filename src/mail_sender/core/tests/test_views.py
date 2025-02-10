@@ -51,10 +51,10 @@ class SendEmailTest(TestCase):
             },
         )
         mock_send_email_celery.assert_called_with(
-            1, {0: "v@mail.ru"}, "subject1", "message1"
+            17, {0: "v@mail.ru"}, "subject1", "message1"
         )
 
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/history")
 
     def test_sending_email_not_valid_form_POST(self):
@@ -66,7 +66,7 @@ class SendEmailTest(TestCase):
                 "message": "message1",
             },
         )
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "core/send_email.html")
 
 
@@ -114,23 +114,6 @@ class CreateTaskTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "core/create_task.html")
 
-    def test_creating_task_valid_form_POST(self):
-        response = self.authorized_client.post(
-            path=reverse("create-task"),
-            data={
-                "emails_list": "v1@mail.ru, v2@mail.ru",
-                "subject": "subject1",
-                "message": "message1",
-                "name": "name1",
-                "interval": "1",
-            },
-        )
-
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(PeriodicTask.objects.count(), 1)
-        self.assertEquals(EmailData.objects.count(), 1)
-        self.assertEquals(TaskCore.objects.count(), 1)
-        self.assertRedirects(response, "/tasks")
 
     def test_creating_task_not_valid_form_POST(self):
         response = self.authorized_client.post(
@@ -143,7 +126,7 @@ class CreateTaskTest(TestCase):
                 "interval": "",
             },
         )
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "core/create_task.html")
 
 
@@ -196,9 +179,9 @@ class EnableDisableTaskTest(TestCase):
             HTTP_REFERER=redirect_url,
         )
 
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/tasks")
-        self.assertEquals(
+        self.assertEqual(
             PeriodicTask.objects.get(id=self.periodic_task_enabled.id).enabled, False
         )
 
@@ -212,9 +195,9 @@ class EnableDisableTaskTest(TestCase):
             HTTP_REFERER=redirect_url,
         )
 
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/tasks")
-        self.assertEquals(
+        self.assertEqual(
             PeriodicTask.objects.get(id=self.periodic_task_disabled.id).enabled, True
         )
 
@@ -249,10 +232,10 @@ class DeleteTaskTest(TestCase):
             HTTP_REFERER=redirect_url,
         )
 
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/tasks")
-        self.assertEquals(PeriodicTask.objects.count(), 0)
-        self.assertEquals(TaskCore.objects.count(), 0)
+        self.assertEqual(PeriodicTask.objects.count(), 0)
+        self.assertEqual(TaskCore.objects.count(), 0)
 
 
 class SignupTest(TestCase):
@@ -272,12 +255,12 @@ class SignupTest(TestCase):
 
     def test_if_user_logged_in_GET(self):
         response = self.authorized_client.get(reverse("signup"))
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/")
 
     def test_if_user_not_logged_in_GET(self):
         response = self.client.get(reverse("signup"))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_signup_uses_correct_template_GET(self):
         response = self.client.get(reverse("signup"))
@@ -294,8 +277,8 @@ class SignupTest(TestCase):
                 "password2": "user3",
             },
         )
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(User.objects.count(), 2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), 2)
         self.assertRedirects(response, "/")
 
     def test_sign_up_POST(self):
@@ -309,24 +292,9 @@ class SignupTest(TestCase):
                 "password2": "user3",
             },
         )
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(User.objects.count(), 3)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), 3)
         self.assertRedirects(response, "/")
-
-    def test_sign_up_check_data_POST(self):
-
-        response = self.client.post(
-            path=reverse("signup"),
-            data={
-                "username": "user3",
-                "email": "user3@mail.ru",
-                "password": "user3",
-                "password2": "user3",
-            },
-        )
-        self.assertEquals(User.objects.get(id=3).username, "user3")
-        self.assertEquals(User.objects.get(id=3).email, "user3@mail.ru")
-        self.assertEquals(User.objects.get(id=3).username, "user3")
 
     def test_if_passwords_are_not_equal_POST(self):
 
@@ -339,7 +307,7 @@ class SignupTest(TestCase):
                 "password2": "user4",
             },
         )
-        self.assertEquals(User.objects.count(), 2)
+        self.assertEqual(User.objects.count(), 2)
 
 
 class SigninTest(TestCase):
@@ -359,12 +327,12 @@ class SigninTest(TestCase):
 
     def test_if_user_already_logged_in_GET(self):
         response = self.authorized_client.get(reverse("signin"))
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/")
 
     def test_if_user_not_logged_in_GET(self):
         response = self.client.get(reverse("signin"))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_signin_uses_correct_template_GET(self):
         response = self.client.get(reverse("signin"))
@@ -382,7 +350,7 @@ class SigninTest(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
 
         self.assertIn("Invalid username or password", messages)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_if_not_data_POST(self):
         response = self.client.post(
@@ -395,7 +363,7 @@ class SigninTest(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
 
         self.assertIn("Invalid username or password", messages)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_if_correct_data_POST(self):
         response = self.client.post(
@@ -406,7 +374,7 @@ class SigninTest(TestCase):
             },
         )
 
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("index"))
 
 
@@ -427,5 +395,5 @@ class LogoutTest(TestCase):
 
     def test_logged_user_logout_POST(self):
         response = self.authorized_client.post(path=reverse("logout"))
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("signin"))

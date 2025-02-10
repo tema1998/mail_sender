@@ -9,3 +9,6 @@ run-app:
 
 run-migrate:
 	cd src && cd mail_sender && python manage.py makemigrations && python manage.py migrate
+
+run-test:
+	cd src && cd mail_sender && python manage.py test

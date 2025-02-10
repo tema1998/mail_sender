@@ -18,25 +18,25 @@ class EmailDataModelTest(TestCase):
     def test_emails_label(self):
         email_data = EmailData.objects.get(id=1)
         field_label = email_data._meta.get_field("emails").verbose_name
-        self.assertEquals(field_label, "Email(s)")
+        self.assertEqual(field_label, "Email(s)")
 
     def test_subject_label(self):
         email_data = EmailData.objects.get(id=1)
         field_label = email_data._meta.get_field("subject").verbose_name
-        self.assertEquals(field_label, "Subject")
+        self.assertEqual(field_label, "Subject")
 
     def test_message_label(self):
         email_data = EmailData.objects.get(id=1)
         field_label = email_data._meta.get_field("message").verbose_name
-        self.assertEquals(field_label, "Message")
+        self.assertEqual(field_label, "Message")
 
     def test_verbose_names(self):
         email_data = EmailData.objects.get(id=1)
         verbose_name = email_data._meta.verbose_name
         verbose_name_plural = email_data._meta.verbose_name_plural
 
-        self.assertEquals(verbose_name, "Email data")
-        self.assertEquals(verbose_name_plural, "Emails data")
+        self.assertEqual(verbose_name, "Email data")
+        self.assertEqual(verbose_name_plural, "Emails data")
 
 
 class EmailHistoryModelTest(TestCase):
@@ -60,25 +60,25 @@ class EmailHistoryModelTest(TestCase):
     def test_user_label(self):
         email_history = EmailHistory.objects.get(id=1)
         field_label = email_history._meta.get_field("user").verbose_name
-        self.assertEquals(field_label, "User")
+        self.assertEqual(field_label, "User")
 
     def test_email_data_label(self):
         email_history = EmailHistory.objects.get(id=1)
         field_label = email_history._meta.get_field("email_data").verbose_name
-        self.assertEquals(field_label, "Email(s)")
+        self.assertEqual(field_label, "Email(s)")
 
     def test_task_result_label(self):
         email_history = EmailHistory.objects.get(id=1)
         field_label = email_history._meta.get_field("task_result").verbose_name
-        self.assertEquals(field_label, "Task result")
+        self.assertEqual(field_label, "Task result")
 
     def test_verbose_names(self):
         email_history = EmailHistory.objects.get(id=1)
         verbose_name = email_history._meta.verbose_name
         verbose_name_plural = email_history._meta.verbose_name_plural
 
-        self.assertEquals(verbose_name, "History of emails")
-        self.assertEquals(verbose_name_plural, "History of emails")
+        self.assertEqual(verbose_name, "History of emails")
+        self.assertEqual(verbose_name_plural, "History of emails")
 
 
 class TaskCoreModelTest(TestCase):
@@ -101,25 +101,25 @@ class TaskCoreModelTest(TestCase):
     def test_user_label(self):
         task_core = TaskCore.objects.get(id=1)
         field_label = task_core._meta.get_field("user").verbose_name
-        self.assertEquals(field_label, "User")
+        self.assertEqual(field_label, "User")
 
     def test_email_data_label(self):
         task_core = TaskCore.objects.get(id=1)
         field_label = task_core._meta.get_field("email_data").verbose_name
-        self.assertEquals(field_label, "Email(s)")
+        self.assertEqual(field_label, "Email(s)")
 
     def test_task_label(self):
         task_core = TaskCore.objects.get(id=1)
         field_label = task_core._meta.get_field("task").verbose_name
-        self.assertEquals(field_label, "Task")
+        self.assertEqual(field_label, "Task")
 
     def test_verbose_names(self):
         task_core = TaskCore.objects.get(id=1)
         verbose_name = task_core._meta.verbose_name
         verbose_name_plural = task_core._meta.verbose_name_plural
 
-        self.assertEquals(verbose_name, "Task management")
-        self.assertEquals(verbose_name_plural, "Tasks management")
+        self.assertEqual(verbose_name, "Task management")
+        self.assertEqual(verbose_name_plural, "Tasks management")
 
 
 class TaskHistoryModelTest(TestCase):
@@ -143,22 +143,22 @@ class TaskHistoryModelTest(TestCase):
     def test_user_label(self):
         task_history = TaskHistory.objects.get(id=1)
         field_label = task_history._meta.get_field("user").verbose_name
-        self.assertEquals(field_label, "User")
+        self.assertEqual(field_label, "User")
 
     def test_email_data_label(self):
         task_history = TaskHistory.objects.get(id=1)
         field_label = task_history._meta.get_field("email_data").verbose_name
-        self.assertEquals(field_label, "Email(s)")
+        self.assertEqual(field_label, "Email(s)")
 
     def test_task_result_label(self):
         task_history = TaskHistory.objects.get(id=1)
         field_label = task_history._meta.get_field("task_result").verbose_name
-        self.assertEquals(field_label, "Task result")
+        self.assertEqual(field_label, "Task result")
 
     def test_verbose_names(self):
         task_history = TaskHistory.objects.get(id=1)
         verbose_name = task_history._meta.verbose_name
         verbose_name_plural = task_history._meta.verbose_name_plural
 
-        self.assertEquals(verbose_name, "History of emails sent by tasks")
-        self.assertEquals(verbose_name_plural, "History of emails sent by tasks")
+        self.assertEqual(verbose_name, "History of emails sent by tasks")
+        self.assertEqual(verbose_name_plural, "History of emails sent by tasks")
