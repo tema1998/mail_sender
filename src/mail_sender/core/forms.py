@@ -11,24 +11,26 @@ class SendEmailForm(forms.ModelForm):
 
     class Meta:
         model = EmailData
-        fields = ['subject', 'message']
+        fields = ["subject", "message"]
 
     def clean_emails_list(self):
         """
         Method converts emails to JSON and check that we have at least one valid email.
         """
-        emails_list = self.cleaned_data['emails_list']
+        emails_list = self.cleaned_data["emails_list"]
         json_emails_list = validate_emails_and_convert_to_json(emails_list)
         if len(json_emails_list) == 0:
-            raise forms.ValidationError('Required at least one valid email, for example: mail-sender@gmail.com, '
-                                        'sender-email@gmail.com')
+            raise forms.ValidationError(
+                "Required at least one valid email, for example: mail-sender@gmail.com, "
+                "sender-email@gmail.com"
+            )
         return json_emails_list
 
 
 class CreateTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CreateTaskForm, self).__init__(*args, **kwargs)
-        self.fields['interval'].required = True
+        self.fields["interval"].required = True
 
     emails_list = forms.CharField()
     subject = forms.CharField(max_length=100)
@@ -36,33 +38,35 @@ class CreateTaskForm(forms.ModelForm):
 
     class Meta:
         model = PeriodicTask
-        fields = ['name', 'interval']
+        fields = ["name", "interval"]
 
     def clean_emails_list(self):
         """
         Method converts emails to JSON and check that we have at least one valid email.
         """
-        emails_list = self.cleaned_data['emails_list']
+        emails_list = self.cleaned_data["emails_list"]
         json_emails_list = validate_emails_and_convert_to_json(emails_list)
         if len(json_emails_list) == 0:
-            raise forms.ValidationError('Required at least one valid email, for example: mail-sender@gmail.com, '
-                                        'sender-email@gmail.com')
+            raise forms.ValidationError(
+                "Required at least one valid email, for example: mail-sender@gmail.com, "
+                "sender-email@gmail.com"
+            )
         return json_emails_list
 
 
 class SignupForm(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Repeat password", widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ("username", "email")
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError('Passwords don\'t match.')
-        return cd['password2']
+        if cd["password"] != cd["password2"]:
+            raise forms.ValidationError("Passwords don't match.")
+        return cd["password2"]
 
 
 class SigninForm(forms.Form):

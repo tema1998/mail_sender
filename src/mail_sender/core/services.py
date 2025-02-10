@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from mail_sender import settings
 
 # Email regex pattern for validation
-EMAIL_REGEX = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+EMAIL_REGEX = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
 
 
 def send_email(recipient_list: list, subject: str, message: str) -> None:
@@ -19,7 +19,7 @@ def send_email(recipient_list: list, subject: str, message: str) -> None:
         message,
         str(settings.EMAIL_HOST_USER),
         recipient_list,
-        fail_silently=False
+        fail_silently=False,
     )
 
 
@@ -42,7 +42,7 @@ def parse_and_validate_emails(emails_str: str) -> list:
     """
     return [
         email.strip().strip("'\"")
-        for email in emails_str.split(',')
+        for email in emails_str.split(",")
         if validate_email(email.strip().strip("'\""))
     ]
 
