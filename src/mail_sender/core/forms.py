@@ -2,8 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django_celery_beat.models import PeriodicTask
 
-from .models import EmailHistory, EmailData
-from .services import emails_to_json
+from .models import EmailData
+from .services import validate_emails_and_convert_to_json
 
 
 class SendEmailForm(forms.ModelForm):
@@ -18,7 +18,7 @@ class SendEmailForm(forms.ModelForm):
         Method converts emails to JSON and check that we have at least one valid email.
         """
         emails_list = self.cleaned_data['emails_list']
-        json_emails_list = emails_to_json(emails_list)
+        json_emails_list = validate_emails_and_convert_to_json(emails_list)
         if len(json_emails_list) == 0:
             raise forms.ValidationError('Required at least one valid email, for example: mail-sender@gmail.com, '
                                         'sender-email@gmail.com')
@@ -43,7 +43,7 @@ class CreateTaskForm(forms.ModelForm):
         Method converts emails to JSON and check that we have at least one valid email.
         """
         emails_list = self.cleaned_data['emails_list']
-        json_emails_list = emails_to_json(emails_list)
+        json_emails_list = validate_emails_and_convert_to_json(emails_list)
         if len(json_emails_list) == 0:
             raise forms.ValidationError('Required at least one valid email, for example: mail-sender@gmail.com, '
                                         'sender-email@gmail.com')

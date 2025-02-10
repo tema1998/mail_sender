@@ -47,7 +47,7 @@ def parse_and_validate_emails(emails_str: str) -> list:
     ]
 
 
-def emails_to_json(emails_str: str) -> dict:
+def validate_emails_and_convert_to_json(emails_str: str) -> dict:
     """
     Converts a string of emails into an enumerated dictionary of validated emails.
 
