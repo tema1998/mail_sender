@@ -19,40 +19,44 @@ Functions |
 `Sign in / Sign up` |
 
 ### Screenshots
-<image src="webapp/mail_sender/static/images/tasks.jpg" alt="Screenshot of Tasks page">
-<image src="webapp/mail_sender/static/images/history.jpg" alt="Screenshot of History page">
+<image src="src/mail_sender/static/images/tasks.jpg" alt="Screenshot of Tasks page">
+<image src="src/mail_sender/static/images/history.jpg" alt="Screenshot of History page">
 
 ### Settings
-File `.env.dev` contains project, DB, email settings. Add your email settings.
+Create .env file using .env.example.
+
+### Install dependencies
+First of all activate virtual environment:
 ```
-DEBUG=True
-SECRET_KEY=your_secret_key
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1
-
-SQL_ENGINE=django.db.backends.postgresql_psycopg2
-SQL_DATABASE=postgres
-SQL_USER=postgres
-SQL_PASSWORD=postgres
-SQL_HOST=pgdb
-SQL_PORT=5432
-
-EMAIL_USE_TLS=True
-EMAIL_HOST=smtp.gmail.com
-EMAIL_HOST_USER=
-EMAIL_HOST_PASSWORD=
-EMAIL_PORT=587
+python3 -m venv venv
+source venv/bin/activate
+```
+```
+pip install requirements.txt
 ```
 
-### Run project
-Migrations will be started automatically
+### Local development
+Run DB:
 ```
-docker-compose up -d --build
+make run-db
 ```
-To create superuser - run after previous command:
+Run app(without workers):
 ```
-docker exec -it container_id python ./mail_sender/manage.py createsuperuser
+make run-app
 ```
-Don't forget to create task's intervals in the admin panel. I advise you to create intervals minimum 1 hour to avoid
+To run migration:
+```
+make run-migration
+```
+
+### Makefile
+
+To run app with db and workers docker(migrations will be run automatically):
+```
+make start
+```
+### Settings
+To create task's intervals in the admin panel. I advise you to create intervals minimum 1 hour to avoid
 problems with email blocking. Users will be able to send emails every 1 hour automatically:
 ```
 http://127.0.0.1:8000/admin/django_celery_beat/intervalschedule/

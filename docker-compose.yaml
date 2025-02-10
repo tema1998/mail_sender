@@ -5,75 +5,79 @@ services:
     image: redis:latest
     restart: always
     ports:
-      - "6379:6379"
+      - "6379:6379" #TODO: DELETE ON PROD
 
   django:
     restart: always
     build:
-      context: ./webapp #docker file here
+      context: .
     env_file:
-      - ./.env.dev
+      - .env
     ports:
-      - "8000:8000"
+      - "8000:8000" #TODO: DELETE ON PROD
     depends_on:
-      - pgdb
-    command: ["python3", "./mail_sender/manage.py", "runserver", "0.0.0.0:8000"]
-
+      pgdb:
+        condition: service_healthy
 
   worker:
     restart: always
     build:
-      context: ./webapp
+      context: .
     volumes:
-      - ./webapp/:/usr/src/app/
+      - ./src/:/usr/src/app/
     depends_on:
       - redis
+      - django
     env_file:
-      - ./.env.dev
+      - ./.env
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "worker", "-l", "info"]
 
   beat:
     restart: always
     build:
-      context: ./webapp
+      context: .
     depends_on:
       - worker
       - redis
+      - django
     volumes:
-      - ./webapp/:/usr/src/app/
+      - ./src/:/usr/src/app/
     env_file:
-      - ./.env.dev
+      - ./.env
     command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "beat", "-l", "info", "-S", "django"]
 
-#  flower:
-#    restart: always
-#    build:
-#      context: ./webapp
-#    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
-#    ports:
-#      - "5001:5001"
-#    env_file:
-#      - ./.env.dev
+  flower:
+    restart: always
+    build:
+      context: .
+    command: ["celery", "--workdir=./mail_sender", "-A", "mail_sender", "flower", "--port=5001"]
+    depends_on:
+      - worker
+      - redis
+      - django
+    ports:
+      - "5001:5001" #TODO: DELETE ON PROD
+    env_file:
+      - ./.env
 
   pgdb:
     image: postgres
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     container_name: pgdb
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 8
+    restart: always
     ports:
-      - "5432:5432"
+      - "5432:5432" #TODO: DELETE ON PROD
     volumes:
       - pgdbdata-new:/var/lib/postgresql/data/
-
-  migration:
-    build:
-      context: ./webapp
-    command: python ./mail_sender/manage.py migrate --noinput
-    depends_on:
-      - pgdb
     env_file:
-      - ./.env.dev
+      - .env
 volumes:
   pgdbdata-new:
