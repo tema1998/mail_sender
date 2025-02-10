@@ -6,9 +6,10 @@ WORKDIR /s
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY mail_sender/requirements.txt ./
+COPY ./src/mail_sender/requirements.txt ./
 RUN pip install -r requirements.txt
-COPY ./mail_sender ./mail_sender
+COPY ./src/mail_sender ./mail_sender
+COPY ./src/start.sh ./
+COPY .env ./mail_sender/
 
-
-CMD ["python3", "./mail_sender/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/bin/bash", "start.sh"]
